@@ -89,8 +89,11 @@ namespace CustomerCare
                 }
             }else if (dataGridView.Columns[dataGridView.CurrentCell.ColumnIndex].DataPropertyName.Contains("remind"))
             {
-                //dataGridView.Columns[dataGridView.CurrentCell.ColumnIndex].c
-                //DataGridViewRow row = dataGridView.Columns[dataGridView.CurrentCell.ColumnIndex]
+                DataGridViewCheckBoxCell checkBox = (dataGridView.CurrentCell as DataGridViewCheckBoxCell);
+                checkBox.Value = ((bool)checkBox.Value == true ? false : true);
+            }
+            else if (dataGridView.Columns[dataGridView.CurrentCell.ColumnIndex].DataPropertyName.Contains("ordered"))
+            {
                 DataGridViewCheckBoxCell checkBox = (dataGridView.CurrentCell as DataGridViewCheckBoxCell);
                 checkBox.Value = ((bool)checkBox.Value == true ? false : true);
             }
@@ -101,7 +104,7 @@ namespace CustomerCare
             List<InfoCustomer> dataOnGird = (List<InfoCustomer>)dataGridView.DataSource;
             foreach (var item in dataOnGird)
             {
-                _allCustomer.Where(a => a.id == item.id).Select(a => { a.remind = item.remind; return a; }).ToList();
+                _allCustomer.Where(a => a.id == item.id).Select(a => { a.remind = item.remind; a.ordered = item.ordered ; return a; }).ToList();
             }
             File.WriteAllText(_pathJson + "DataBase.json", JsonConvert.SerializeObject(_allCustomer));
 

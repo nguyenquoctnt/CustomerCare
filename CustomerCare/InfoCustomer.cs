@@ -14,5 +14,6 @@ namespace CustomerCare
         public DateTime date { get; set; }
         public string link { get; set; }
         public bool remind { get; set; }
+        public bool ordered { get; set; }
     }
 }

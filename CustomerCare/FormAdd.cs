@@ -73,7 +73,8 @@ namespace CustomerCare
                 name = txtName.Text,
                 phone = txtPhone.Text,
                 date = dtpTime.Value,
-                link = txtFace.Text
+                link = txtFace.Text,
+                ordered = ckOrdered.Checked
             };
             string getMes = ValidationData(addNewCustomer);
             if (getMes != string.Empty)
