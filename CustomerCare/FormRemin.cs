@@ -17,6 +17,7 @@ namespace CustomerCare
     {
         private List<InfoCustomer> _allCustomer;
         private string _pathJson = string.Empty;
+        delegate void updateGridDelegate();
         public FormRemin()
         {
             InitializeComponent();
@@ -25,6 +26,8 @@ namespace CustomerCare
 #else
             _pathJson = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Data\\";
 #endif
+            dtpFromDate.Value = DateTime.Now;
+            dtpToDate.Value = DateTime.Now.AddDays(7);
         }
 
         private void FormRemin_Load(object sender, EventArgs e)
@@ -35,17 +38,16 @@ namespace CustomerCare
 
         private void populateGroupList()
         {
-            DateTime currentDate = DateTime.UtcNow;
-            dataGridView.DataSource = null;
-            //dataGridView.AutoGenerateColumns = false;
-            dataGridView.Columns["date"].DefaultCellStyle.Format = "dd/MM/yyyy";
+            DateTime currentDate = DateTime.Now;
+            //dataGridView.DataSource = null;
 
             string json = File.ReadAllText(_pathJson + "DataBase.json");
             _allCustomer = JsonConvert.DeserializeObject<List<InfoCustomer>>(json);
-            List<InfoCustomer> listCustomer = new List<InfoCustomer>(_allCustomer.Where(a => a.date >= currentDate && a.date <= currentDate.AddDays(7)).OrderBy(a => a.date).ToList()) ;
+            //List<InfoCustomer> listCustomer = new List<InfoCustomer>(_allCustomer.Where(a => a.date >= currentDate && a.date <= currentDate.AddDays(7)).OrderBy(a => a.date).ToList());
 
-            dataGridView.DataSource = listCustomer;
+            dataGridView.DataSource = FilterData();
             dataGridView.Invalidate();
+            dataGridView.Columns["date"].DefaultCellStyle.Format = "dd/MM/yyyy";
 
         }
 
@@ -82,12 +84,13 @@ namespace CustomerCare
             {
                 if (!String.IsNullOrWhiteSpace(dataGridView.CurrentCell.EditedFormattedValue.ToString()))
                 {
-                    if(dataGridView.CurrentCell.EditedFormattedValue.ToString().Contains("http"))
+                    if (dataGridView.CurrentCell.EditedFormattedValue.ToString().Contains("http"))
                     {
                         System.Diagnostics.Process.Start(dataGridView.CurrentCell.EditedFormattedValue.ToString());
                     }
                 }
-            }else if (dataGridView.Columns[dataGridView.CurrentCell.ColumnIndex].DataPropertyName.Contains("remind"))
+            }
+            else if (dataGridView.Columns[dataGridView.CurrentCell.ColumnIndex].DataPropertyName.Contains("remind"))
             {
                 DataGridViewCheckBoxCell checkBox = (dataGridView.CurrentCell as DataGridViewCheckBoxCell);
                 checkBox.Value = ((bool)checkBox.Value == true ? false : true);
@@ -104,7 +107,7 @@ namespace CustomerCare
             List<InfoCustomer> dataOnGird = (List<InfoCustomer>)dataGridView.DataSource;
             foreach (var item in dataOnGird)
             {
-                _allCustomer.Where(a => a.id == item.id).Select(a => { a.remind = item.remind; a.ordered = item.ordered ; return a; }).ToList();
+                _allCustomer.Where(a => a.id == item.id).Select(a => { a.remind = item.remind; a.ordered = item.ordered; return a; }).ToList();
             }
             File.WriteAllText(_pathJson + "DataBase.json", JsonConvert.SerializeObject(_allCustomer));
 
@@ -116,11 +119,12 @@ namespace CustomerCare
         private void dataGridView_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             DateTime getDate = (DateTime)dataGridView.Rows[e.RowIndex].Cells["date"].Value;
-            int day = (getDate - DateTime.UtcNow).Days;
-            if(day <= 3 && (bool)dataGridView.Rows[e.RowIndex].Cells["remind"].Value == false)
+            int day = (getDate - DateTime.Now).Days;
+            if (day <= 3 && (bool)dataGridView.Rows[e.RowIndex].Cells["remind"].Value == false)
             {
                 dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
-            }else
+            }
+            else
             {
                 dataGridView.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
             }
@@ -129,6 +133,39 @@ namespace CustomerCare
             //{
             //    dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Beige;
             //}
+        }
+
+        private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView.Columns[dataGridView.CurrentCell.ColumnIndex].DataPropertyName.Contains("id"))
+            {
+                InfoCustomer data = new InfoCustomer
+                {
+                    id = (string)dataGridView.Rows[e.RowIndex].Cells["id"].Value,
+                    name = (string)dataGridView.Rows[e.RowIndex].Cells["name"].Value,
+                    phone = (string)dataGridView.Rows[e.RowIndex].Cells["phone"].Value,
+                    date = (DateTime)dataGridView.Rows[e.RowIndex].Cells["date"].Value,
+                    link = (string)dataGridView.Rows[e.RowIndex].Cells["link"].Value,
+                    ordered = (bool)dataGridView.Rows[e.RowIndex].Cells["ordered"].Value
+                };
+                FormAdd updateData = new FormAdd(data,_allCustomer,this);
+                updateData.Show();
+            }
+        }
+
+        private List<InfoCustomer> FilterData()
+        {
+            List<InfoCustomer> listCustomer = new List<InfoCustomer>(_allCustomer.Where(a => a.date >= dtpFromDate.Value && a.date <= dtpToDate.Value).OrderBy(a => a.date).ToList());
+            return listCustomer;
+        }
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            dataGridView.DataSource = FilterData();
+            dataGridView.Invalidate();
+        }
+        public void RefreshGrid()
+        {
+            populateGroupList();
         }
     }
 }

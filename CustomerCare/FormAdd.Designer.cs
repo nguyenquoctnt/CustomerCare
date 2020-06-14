@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ckOrdered = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -43,13 +45,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnAddAndClose = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.ckOrdered = new System.Windows.Forms.CheckBox();
+            this.txtId = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.txtId);
             this.groupBox1.Controls.Add(this.ckOrdered);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.label8);
@@ -70,6 +72,24 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Thông Tin Khách Hàng";
+            // 
+            // ckOrdered
+            // 
+            this.ckOrdered.AutoSize = true;
+            this.ckOrdered.Location = new System.Drawing.Point(112, 144);
+            this.ckOrdered.Name = "ckOrdered";
+            this.ckOrdered.Size = new System.Drawing.Size(15, 14);
+            this.ckOrdered.TabIndex = 15;
+            this.ckOrdered.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 145);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(52, 13);
+            this.label9.TabIndex = 13;
+            this.label9.Text = "Đã Chốt: ";
             // 
             // label8
             // 
@@ -197,23 +217,13 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
-            // label9
+            // txtId
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 145);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(52, 13);
-            this.label9.TabIndex = 13;
-            this.label9.Text = "Đã Chốt: ";
-            // 
-            // ckOrdered
-            // 
-            this.ckOrdered.AutoSize = true;
-            this.ckOrdered.Location = new System.Drawing.Point(112, 144);
-            this.ckOrdered.Name = "ckOrdered";
-            this.ckOrdered.Size = new System.Drawing.Size(15, 14);
-            this.ckOrdered.TabIndex = 15;
-            this.ckOrdered.UseVisualStyleBackColor = true;
+            this.txtId.Location = new System.Drawing.Point(319, 24);
+            this.txtId.Name = "txtId";
+            this.txtId.Size = new System.Drawing.Size(100, 20);
+            this.txtId.TabIndex = 16;
+            this.txtId.Visible = false;
             // 
             // FormAdd
             // 
@@ -250,5 +260,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox ckOrdered;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox txtId;
     }
 }
